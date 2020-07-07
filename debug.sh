@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. ./setenv.sh
+
 NAMESPACE=default
 
 usage() {
@@ -27,7 +29,7 @@ case "$1" in
         then
             echo "Deployment debug already exists in $NAMESPACE"
         else
-            kubectl -n $NAMESPACE create deployment debug --image=steveww/debug
+            kubectl -n $NAMESPACE create deployment debug --image=$IMAGE
         fi
         ;;
     conn)

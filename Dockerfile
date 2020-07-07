@@ -1,6 +1,8 @@
-FROM alpine:3.10
+FROM alpine
 
-RUN apk update && apk add bash curl iputils bind-tools busybox-extras
+RUN apk add --update --no-cache \
+    bash curl iputils bind-tools dhcping dhcpcd busybox-extras && \
+    rm -rf /var/cache/apk/*
 
 COPY scripts/sleeper.sh /opt/
 COPY scripts/bashrc /root/.bashrc
