@@ -4,9 +4,9 @@ BATCH_SIZE=5
 
 while true
 do
-        # random number between 1 and 12
-        LIMIT=$(shuf -i 1-12 -n 1)
-        if [ $LIMIT -eq 1 ]
+        # random number
+        CRASHIT=$(shuf -i 1-100 -n 1)
+        if [ $CRASHIT -le 1 ]
         then
             # force crash loop
             for CRASH in $(seq 5)
@@ -19,6 +19,7 @@ do
                 done
             done
         else
+            LIMIT=$(shuf -i 1-12 -n 1)
             for SEQ in $(seq $LIMIT)
             do
                     curl -s "http://leaky.test:8080/batch?count=$BATCH_SIZE"
