@@ -15,7 +15,7 @@ Deploys the image to the namespace `my-app` if a namespace is not given it will 
 Now that the image is running, get a shell to it.
 
 ```shell
-$ ./debug -n my-app conn
+$ ./debug.sh -n my-app conn
 ```
 
 The image has some useful tools installed such as:
