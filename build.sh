@@ -1,6 +1,6 @@
 #!/bin/sh
 
-. ./setenv.sh
+IMAGE="steveww/debug"
 
 docker build -t $IMAGE .
 

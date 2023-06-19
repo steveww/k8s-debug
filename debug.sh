@@ -1,8 +1,7 @@
 #!/bin/bash
 
-. ./setenv.sh
-
-NAMESPACE=default
+IMAGE="steveww/debug"
+NAMESPACE="default"
 
 usage() {
     echo " "
@@ -21,6 +20,7 @@ do
 done
 shift $((OPTIND - 1))
 
+echo "Using namespace $NAMESPACE"
 case "$1" in
     start)
         kubectl -n $NAMESPACE get deployment debug >/dev/null 2>&1
@@ -30,6 +30,7 @@ case "$1" in
             echo "Deployment debug already exists in $NAMESPACE"
         else
             kubectl -n $NAMESPACE create deployment debug --image=$IMAGE
+            kubectl -n $NAMESPACE create service clusterip debug --tcp=8080:8080
         fi
         ;;
     conn)
@@ -47,6 +48,7 @@ case "$1" in
         if [ "$ANS" = "y" ]
         then
             kubectl -n $NAMESPACE delete deployment debug
+            kubectl -n $NAMESPACE delete service debug
         fi
         ;;
     *)
