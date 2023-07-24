@@ -3,9 +3,11 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"strings"
+	"time"
 )
 
 func formatRequest(req *http.Request) string {
@@ -40,6 +42,13 @@ func handler(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+	crash := os.Getenv("CRASH")
+	if len(crash) != 0 {
+		d := time.Duration(rand.Intn(4)+1) * time.Second
+		time.Sleep(d)
+		log.Println("crashing out")
+		os.Exit(1)
+	}
 	host := os.Getenv("APP_HOST")
 	if len(host) == 0 {
 		host = "0.0.0.0"
