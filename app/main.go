@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"log"
-	"math/rand"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -41,13 +41,30 @@ func handler(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintln(w, formatRequest(req))
 }
 
+func crasher(hour int) {
+	log.Printf("crasher enabled at %v hour", hour)
+	for true {
+		time.Sleep(10 * time.Second)
+		now := time.Now()
+		if now.Hour()%hour == 0 && now.Minute() <= 10 {
+			log.Println("crashing out")
+			os.Exit(1)
+		}
+	}
+}
+
 func main() {
 	crash := os.Getenv("CRASH")
 	if len(crash) != 0 {
-		d := time.Duration(rand.Intn(4)+1) * time.Second
-		time.Sleep(d)
-		log.Println("crashing out")
-		os.Exit(1)
+		if i, err := strconv.Atoi(crash); err != nil {
+			log.Printf("%v not a number\n", crash)
+		} else {
+			if i >= 0 && i < 24 {
+				go crasher(i)
+			} else {
+				log.Printf("%v out of range\n", i)
+			}
+		}
 	}
 	host := os.Getenv("APP_HOST")
 	if len(host) == 0 {
