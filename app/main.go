@@ -36,6 +36,10 @@ func formatRequest(req *http.Request) string {
 	return strings.Join(result, "\n")
 }
 
+func health(w http.ResponseWriter, req *http.Request) {
+	fmt.Fprintln(w, "OK")
+}
+
 func handler(w http.ResponseWriter, req *http.Request) {
 	log.Println("handling request")
 	fmt.Fprintln(w, formatRequest(req))
@@ -59,7 +63,7 @@ func main() {
 		if i, err := strconv.Atoi(crash); err != nil {
 			log.Printf("%v not a number\n", crash)
 		} else {
-			if i >= 0 && i < 24 {
+			if i > 0 && i < 24 {
 				go crasher(i)
 			} else {
 				log.Printf("%v out of range\n", i)
@@ -78,6 +82,8 @@ func main() {
 
 	// Pattern / matches everything
 	http.HandleFunc("/", handler)
+	http.HandleFunc("/health", health)
+	http.HandleFunc("/ready", health)
 
 	log.Printf("Starting on %v\n", address)
 	if err := http.ListenAndServe(address, nil); err != nil {
