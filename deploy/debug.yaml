@@ -15,6 +15,10 @@ spec:
       containers:
       - name: debug
         image: steveww/debug
+        resources:
+          limits:
+            cpu: 1
+            memory: 500Mi
         ports:
           - name: http
             containerPort: 8080
@@ -37,3 +41,15 @@ spec:
               fieldRef:
                 fieldPath: spec.nodeName
         
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: debug
+spec:
+  type: LoadBalancer
+  selector:
+    app: debug
+  ports:
+  - port: 8080
+    targetPort: 8080
