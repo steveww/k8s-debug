@@ -19,7 +19,14 @@ func formatRequest(req *http.Request) string {
 	result = append(result, fmt.Sprintf("Host: %v", req.Host))
 	result = append(result, fmt.Sprintf("Remote: %v", req.RemoteAddr))
 
+	// loop through environment
+	result = append(result, "Environmant")
+	for _, env := range os.Environ() {
+		result = append(result, fmt.Sprint(env))
+	}
+
 	// loop through headers
+	result = append(result, "Headers")
 	for name, values := range req.Header {
 		name = strings.ToLower(name)
 		for _, v := range values {
@@ -28,6 +35,7 @@ func formatRequest(req *http.Request) string {
 	}
 
 	if req.Method == "POST" {
+		result = append(result, "Form")
 		req.ParseForm()
 		result = append(result, "\n")
 		result = append(result, req.Form.Encode())
